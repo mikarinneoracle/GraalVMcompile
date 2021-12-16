@@ -1,0 +1,22 @@
+image: ghcr.io/oracle/oraclelinux:7-slim
+
+stages:
+  - build
+
+build:
+  stage: build
+  script:
+      - yum install gzip -y
+      - yum install tar -y
+      - yum install gcc -y
+      - yum install gcc-c++ -y
+      - yum install zlib-devel -y
+      - export PATH=/usr/local/bin:/usr/bin:/usr/local/sbin
+      - tar -xzf graalvm-ee-java11-linux-amd64-21.3.0.tar.gz
+      - export PATH=apache-maven-3.8.4/bin:graalvm-ee-java11-21.3.0/bin:$PATH
+      - export JAVA_HOME=graalvm-ee-java11-21.3.0
+      - java -version
+      - gu install -L native-image-installable-svm-svmee-java11-linux-amd64-21.3.0.jar
+      - ./mvnw package
+      - sh build.sh
+
